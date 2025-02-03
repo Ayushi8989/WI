@@ -65,4 +65,14 @@ const getSeatAvailability = async (req, res) => {
     }
 };
 
-export { getTrainAvailability, getSeatAvailability }
+const getBookingDetails = async(req, res) =>{
+    const id = req.params.id;
+
+    const result = await pool.query(
+        "SELECT * FROM bookings WHERE id = $1 AND user_id = $2", [id, req.user.userId]
+    )
+
+    if (result.rowCount === 0) return res.status(404).json({ error: "Booking not found" });
+    res.json({ booking: result.rows });
+}
+export { getTrainAvailability, getSeatAvailability, getBookingDetails }
