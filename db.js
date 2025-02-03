@@ -14,6 +14,4 @@ const pool = new Pool({
     ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
 });
 
-const query = (text, params) => pool.query(text, params);
-
-export default { query };
+export default pool;
