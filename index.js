@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import express from 'express';
 
+import db from './db.js';
+
 dotenv.config();
 
 const app = express();
@@ -8,7 +10,7 @@ const port = process.env.PORT || 5001;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {    
+app.get('/', (req, res) => {
     res.send("Welcome!");
 });
 
