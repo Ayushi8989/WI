@@ -44,18 +44,19 @@ const getSeatAvailability = async (req, res) => {
 
         // Assign the last available seat number
         const seatNumber = availableSeats;
-        await client.query(
-            "INSERT INTO bookings (user_id, train_id, seat_number) VALUES ($1, $2, $3)",
+        const bookingDetails = await client.query(
+            "INSERT INTO bookings (user_id, train_id, seat_number) VALUES ($1, $2, $3) RETURNING *",
             [userId, trainId, seatNumber]
         );
 
+        const bookingId = bookingDetails.rows[0].id;
         await client.query(
             "UPDATE trains SET total_seats = total_seats - 1 WHERE id = $1",
             [trainId]
         );
 
         await client.query("COMMIT"); 
-        res.json({ message: "Seat booked successfully", seatNumber });
+        res.json({ message: "Seat booked successfully", seatNumber, bookingId });
     } catch (error) {
         await client.query("ROLLBACK");
         console.error("Booking Error:", error);
